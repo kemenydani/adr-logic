@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  db:
+    container_name: webdevplace-mysql
+    image: mysql:8.0
+    restart: "always"
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: database
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: admin
+    volumes:
+      - ./env/mysql/dump:/docker-entrypoint-initdb.d
+      - ./env/mysql/conf:/etc/mysql/conf.d
+    networks:
+      - default
+  phpmyadmin:
+    container_name: webdevplace-phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db:db
+    ports:
+      - 8081:80
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: admin
+    depends_on:
+      - db
+    networks:
+      - default
+  apache2:
+    container_name: webdevplace-apache2-php7.3
+    build: .
+    restart: always
+    ports:
+      - 8082:80
+    networks:
+      - default
+    volumes:
+      - ./:/var/www/html
+      - ./env/apache2/php:/usr/local/etc/php/php.ini
+      - ./env/apache2/sites-enabled:/etc/apache2/sites-enabled
+      - ./env/apache2/log:/var/log/apache2
+    depends_on:
+      - db
+      - phpmyadmin
+    environment:
+      - VIRTUAL_HOST=webdevplace.local
+    extra_hosts:
+      - "webdevplace.local:127.0.0.1"
+volumes:
+  persistent:

@@ -1,0 +1,6 @@
+/vendor/
+/composer.lock
+/.idea/
+/env/apache2/log/error.log
+/env/apache2/log/other_vhosts_access.log
+/adr-logic.iml
