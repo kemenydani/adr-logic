@@ -26,16 +26,20 @@ final class ActionLoader {
             $args   = $router->getMatchedPathArgs();
             $action = $route->getAction();
 
-            $this->setResponse($action->getResponse(
+            $this->response = $action->getResponse(
                 $this->request,
                 $this->response,
                 $args
-            ));
+            );
 
         } catch (RouterException $e) {
-            var_dump($e);
+            $this->response->setStatus(404);
+            $this->response->setHeaderLocation('404');
+        } catch (\Exception $e) {
+            $this->response->setStatus(500);
+            $this->response->setHeaderLocation('/500');
         } finally {
-            $this->sendResponse();
+            $this->response->send();
         }
     }
 

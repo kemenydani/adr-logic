@@ -15,7 +15,7 @@ final class ArticleListAction extends Action {
         return new Payload();
     }
 
-    public function getResponder(Response $response): Responder {
+    public function getResponder(Request $request, Response $response): Responder {
         return new ArticleListResponder($response);
     }
 }

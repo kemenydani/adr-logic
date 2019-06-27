@@ -6,9 +6,11 @@ namespace app\src\lib;
 class Response {
 
     public $body = '';
+    public $header;
 
     public function __construct() {
-
+        $this->header = new Header();
+        //$this->body = new Body();
     }
 
     public function setBody(string $body) : void {
@@ -33,6 +35,10 @@ class Response {
 
     public function setHeaderContentType(string $type) : void {
         header("Content-Type: {$type}");
+    }
+
+    public function setHeaderLocation(string $path): void {
+        header("Location: {$path}");
     }
 
     public function __toString() : string {

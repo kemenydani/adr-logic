@@ -39,6 +39,14 @@ final class Request {
         return $this->method() === static::REQUEST_METHOD_OPTIONS;
     }
 
+    public function isAjax(): bool {
+        return (
+            isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
+        );
+    }
+
     public function getUri() {
         return $_SERVER['REQUEST_URI'];
     }

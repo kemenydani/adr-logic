@@ -10,7 +10,13 @@ use app\src\responder\Responder;
 
 abstract class Action {
 
-    abstract public function getResponder(Response $response) : Responder;
+    public $responder;
+
+    public function __construct(Responder $responder) {
+        $this->responder = $responder;
+    }
+
+    abstract public function getResponder(Request $request, Response $response) : Responder;
 
     /**
      * @param Request $request
@@ -19,7 +25,7 @@ abstract class Action {
      * @return Response
      */
     public function getResponse(Request $request, Response $response, array $args = []) : Response {
-        return $this->getResponder($response)->getResponse(
+        return $this->getResponder($request, $response)->getResponse(
             $this->main($request, $response, $args)
         );
     }
